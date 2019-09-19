@@ -1,6 +1,8 @@
 # silly macOS
 .DS_Store
 
+# idea
+.idea/
 # build files
 build/
 
