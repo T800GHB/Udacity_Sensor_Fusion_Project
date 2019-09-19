@@ -44,7 +44,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData(std::vector<std::vector<float>> p
 }
 
 
-void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Box window, int& iteration, uint depth=0)
+void render2DTree(std::shared_ptr<Node> node, pcl::visualization::PCLVisualizer::Ptr& viewer, Box window, int& iteration, uint depth=0)
 {
 
 	if(node!=NULL)
@@ -86,8 +86,7 @@ std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<flo
 
 }
 
-int main ()
-{
+int main () {
 
 	// Create viewer
 	Box window;
@@ -104,7 +103,7 @@ int main ()
 	//std::vector<std::vector<float>> points = { {-6.2,7}, {-6.3,8.4}, {-5.2,7.1}, {-5.7,6.3} };
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData(points);
 
-	KdTree* tree = new KdTree;
+	std::shared_ptr<KdTree> tree (new KdTree());
   
     for (int i=0; i<points.size(); i++) 
     	tree->insert(points[i],i); 
@@ -121,7 +120,7 @@ int main ()
   	// Time segmentation process
   	auto startTime = std::chrono::steady_clock::now();
   	//
-  	std::vector<std::vector<int>> clusters = euclideanCluster(points, tree, 3.0);
+  	std::vector<std::vector<int>> clusters = euclideanCluster(points, tree.get(), 3.0);
   	//
   	auto endTime = std::chrono::steady_clock::now();
   	auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
@@ -145,5 +144,7 @@ int main ()
   	{
   	  viewer->spinOnce ();
   	}
+
+    return 0;
   	
 }
