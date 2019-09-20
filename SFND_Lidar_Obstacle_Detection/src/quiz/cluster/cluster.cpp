@@ -75,13 +75,40 @@ void render2DTree(std::shared_ptr<Node> node, pcl::visualization::PCLVisualizer:
 
 }
 
-std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)
+void clusterHelper(int indice, const std::vector<std::vector<float>>& points, std::vector<int>& cluster,
+        std::vector<bool>& processed, const std::shared_ptr<KdTree>& tree, float distanceTol) {
+    processed[indice] = true;
+    cluster.emplace_back(indice);
+    std::vector<int> nearest = tree->search(points[indice], distanceTol);
+
+    for (const auto& id : nearest) {
+        if (not processed[id]) {
+            clusterHelper(id ,points, cluster, processed, tree, distanceTol);
+        }
+    }
+}
+
+std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points,
+        const std::shared_ptr<KdTree>& tree, float distanceTol)
 {
 
 	// TODO: Fill out this function to return list of indices for each cluster
 
 	std::vector<std::vector<int>> clusters;
- 
+    std::vector<bool> processed(points.size(), false);
+
+    int i = 0;
+
+    while (i < points.size()) {
+        if (processed[i]) {
+            i++;
+            continue;
+        }
+        std::vector<int> cluster;
+        clusterHelper(i, points, cluster, processed, tree, distanceTol);
+        clusters.emplace_back(cluster);
+        i++;
+    }
 	return clusters;
 
 }
@@ -120,7 +147,7 @@ int main () {
   	// Time segmentation process
   	auto startTime = std::chrono::steady_clock::now();
   	//
-  	std::vector<std::vector<int>> clusters = euclideanCluster(points, tree.get(), 3.0);
+  	std::vector<std::vector<int>> clusters = euclideanCluster(points, tree, 3.0);
   	//
   	auto endTime = std::chrono::steady_clock::now();
   	auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
@@ -128,7 +155,7 @@ int main () {
 
   	// Render clusters
   	int clusterId = 0;
-	std::vector<Color> colors = {Color(1,0,0), Color(0,1,0), Color(0,0,1)};
+	std::vector<Color> colors = {Color(1,0,0), Color(0,1,0), Color(1,1,0)};
   	for(std::vector<int> cluster : clusters)
   	{
   		pcl::PointCloud<pcl::PointXYZ>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZ>());
