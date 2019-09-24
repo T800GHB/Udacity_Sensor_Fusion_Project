@@ -119,7 +119,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer,
     renderBox(viewer, ego, -1, Color(1, 0, 1));
 
     std::vector<typename pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters
-        = pointProcessorI->Clustering(segmentCloud.first, 0.5, 30, 1500);
+        = pointProcessorI->Clustering(segmentCloud.first, 0.5, 30, 2500);
     int clusterId = 0;
     std::vector<Color> colors {Color(0,0,1), Color(1,1,0), Color(1,0,0), Color(0, 1, 1),  Color(1, 0, 1),
                                Color(0.5, 0, 1), Color(0.5, 1, 0.5)};
@@ -190,6 +190,6 @@ int main (int argc, char** argv)
             streamIterator = stream.begin();
         }
 
-        viewer->spinOnce ();
+        viewer->spinOnce (100);
     } 
 }
