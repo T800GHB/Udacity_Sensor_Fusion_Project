@@ -119,7 +119,8 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer,
     std::vector<typename pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudClusters
         = pointProcessorI->Clustering(segmentCloud.first, 0.5, 30, 2500);
     int clusterId = 0;
-    std::vector<Color> colors {Color(0,0,1), Color(1,1,0), Color(1,0,0), Color(0, 1, 1),  Color(1, 0, 1),
+    std::vector<Color> colors {Color(0,0,1), Color(1,1,0), Color(1,0,0),
+                               Color(0, 1, 1),  Color(1, 0, 1),
                                Color(0.5, 0, 1), Color(0.5, 1, 0.5)};
     for (const auto& cluster : cloudClusters) {
         std::cout << "Cluster size ";
@@ -146,14 +147,22 @@ void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& vi
     
     switch(setAngle)
     {
-        case XY : viewer->setCameraPosition(-distance, -distance, distance, 1, 1, 0); break;
-        case TopDown : viewer->setCameraPosition(0, 0, distance, 1, 0, 1); break;
-        case Side : viewer->setCameraPosition(0, -distance, 0, 0, 0, 1); break;
-        case FPS : viewer->setCameraPosition(-10, 0, 0, 0, 0, 1);
+        case XY :
+            viewer->setCameraPosition(-distance, -distance, distance, 1, 1, 0);
+            break;
+        case TopDown :
+            viewer->setCameraPosition(0, 0, distance, 1, 0, 1);
+            break;
+        case Side :
+            viewer->setCameraPosition(0, -distance, 0, 0, 0, 1);
+            break;
+        case FPS :
+            viewer->setCameraPosition(-10, 0, 0, 0, 0, 1);
     }
 
-    if(setAngle!=FPS)
-        viewer->addCoordinateSystem (1.0);
+    if(setAngle!=FPS) {
+        viewer->addCoordinateSystem(1.0);
+    }
 }
 
 

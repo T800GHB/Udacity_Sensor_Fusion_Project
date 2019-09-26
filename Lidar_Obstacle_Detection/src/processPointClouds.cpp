@@ -22,12 +22,10 @@ void ProcessPointClouds<PointT>::numPoints(typename pcl::PointCloud<PointT>::Ptr
 
 template<typename PointT>
 typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(typename pcl::PointCloud<PointT>::Ptr cloud,
-        float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)
-{
+        float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint) {
 
     // Time segmentation process
     auto startTime = std::chrono::steady_clock::now();
-
     // TODO:: Fill in the function to do voxel grid point reduction and region based filtering
     // Create the filtering object: downsample the dataset using a leaf size of 0.2m
     pcl::VoxelGrid<PointT> vg;

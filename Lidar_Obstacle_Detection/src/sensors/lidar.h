@@ -23,12 +23,15 @@ struct Ray
 	// resoultion: the magnitude of the ray's step, used for ray casting, the smaller the more accurate but the more expensive
 
 	Ray(Vect3 setOrigin, double horizontalAngle, double verticalAngle, double setResolution)
-		: origin(setOrigin), resolution(setResolution), direction(resolution*cos(verticalAngle)*cos(horizontalAngle), resolution*cos(verticalAngle)*sin(horizontalAngle),resolution*sin(verticalAngle)),
-		  castPosition(origin), castDistance(0)
-	{}
+		: origin(setOrigin),
+		resolution(setResolution),
+		direction(resolution*cos(verticalAngle)*cos(horizontalAngle),
+		        resolution*cos(verticalAngle)*sin(horizontalAngle),
+                resolution*sin(verticalAngle)),
+        castPosition(origin), castDistance(0) {}
 
-	void rayCast(const std::vector<Car>& cars, double minDistance, double maxDistance, pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, double slopeAngle, double sderr)
-	{
+	void rayCast(const std::vector<Car>& cars, double minDistance, double maxDistance,
+	        pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, double slopeAngle, double sderr) {
 		// reset ray
 		castPosition = origin;
 		castDistance = 0;
@@ -123,8 +126,9 @@ struct Lidar
 	{
 		cloud->points.clear();
 		auto startTime = std::chrono::steady_clock::now();
-		for(Ray ray : rays)
-			ray.rayCast(cars, minDistance, maxDistance, cloud, groundSlope, sderr);
+		for(Ray ray : rays) {
+            ray.rayCast(cars, minDistance, maxDistance, cloud, groundSlope, sderr);
+        }
 		auto endTime = std::chrono::steady_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 		cout << "ray casting took " << elapsedTime.count() << " milliseconds" << endl;
